@@ -94,6 +94,10 @@ cercaBtn.addEventListener("click", function () {
 	cercaCoordinate(nome)
 		.then(coord => {
 			// Recupera il meteo con le coordinate ottenute
+			// QUI abbiamo l'unica vera differenza con la versione precedente
+			// invece di chiamare semplicemente ottieniMeteo, lo usiamo per il return della funzione del then
+			// questo "collega" le due chiamate: se ottieniMeteo va in catch, manda in catch il livello superiore
+			// con un solo catch gestiamo entrambi
 			return ottieniMeteo(coord.latitude, coord.longitude)
 				.then(meteo => {
 					mostraMeteo(coord.name, meteo.temperature_2m);

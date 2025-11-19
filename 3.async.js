@@ -8,20 +8,18 @@ const output = document.getElementById("output");
  * @returns {Promise<Object>} - Restituisce un oggetto con i dati della città.
  * @throws {Error} - Se la città non viene trovata o c'è un errore di rete.
  */
-function cercaCoordinate(nomeCitta) {
+async function cercaCoordinate(nomeCitta) {
 	const url = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(nomeCitta);
 
-	const chiamata = axios.get(url).then(r => {
-		// Verifica se ci sono risultati
-		if (!r.data.results || r.data.results.length === 0) {
-			throw new Error("Città non trovata");
-		}
-		// Restituisce il primo risultato
-		return r.data.results[0];
+	const response = await axios.get(url);
 
-	});
+	// Verifica se ci sono risultati
+	if (!response.data.results || response.data.results.length === 0) {
+		throw new Error("Città non trovata");
+	}
 
-	return chiamata;
+	// Restituisce il primo risultato
+	return response.data.results[0];
 }
 
 /**
@@ -31,7 +29,7 @@ function cercaCoordinate(nomeCitta) {
  * @returns {Promise<Object>} - L'oggetto meteo (temperatura, ecc.).
  * @throws {Error} - Se ci sono errori di rete o coordinate non valide.
  */
-function ottieniMeteo(lat, lon) {
+async function ottieniMeteo(lat, lon) {
 	// Validazione coordinate prima della chiamata API
 	if (!lat || !lon) {
 		throw new Error("Coordinate non valide");
@@ -39,15 +37,14 @@ function ottieniMeteo(lat, lon) {
 
 	const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`;
 
-	const chiamata = axios.get(url).then(r => {
-		// Verifica che i dati meteo siano presenti
-		if (!r.data.current || r.data.current.temperature_2m === undefined) {
-			throw new Error("Dati meteo non disponibili");
-		}
-		return r.data.current;
-	});
+	const response = await axios.get(url);
 
-	return chiamata;
+	// Verifica che i dati meteo siano presenti
+	if (!response.data.current || response.data.current.temperature_2m === undefined) {
+		throw new Error("Dati meteo non disponibili");
+	}
+
+	return response.data.current;
 }
 
 /**
@@ -76,9 +73,10 @@ function mostraMeteo(nome, temperatura) {
 }
 
 /**
- * Gestisce il flusso principale quando l’utente clicca "Cerca".
+ * Gestisce il flusso principale quando l'utente clicca "Cerca".
+ * Usa async/await per gestione sincrona del codice asincrono.
  */
-cercaBtn.addEventListener("click", function () {
+cercaBtn.addEventListener("click", async function () {
 	const nome = input.value.trim();
 
 	// Controllo input vuoto
@@ -88,25 +86,26 @@ cercaBtn.addEventListener("click", function () {
 	}
 
 	output.textContent = "Ricerca in corso...";
-	cercaBtn.disabled = true; // Disabilita btn per prevenire click multipli (race condition)
+	cercaBtn.disabled = true; // Previene click multipli
 
-	// Chain di promise: coordinate -> return meteo
-	cercaCoordinate(nome)
-		.then(coord => {
-			// Recupera il meteo con le coordinate ottenute
-			return ottieniMeteo(coord.latitude, coord.longitude)
-				.then(meteo => {
-					mostraMeteo(coord.name, meteo.temperature_2m);
-				});
-		})
-		.catch(err => {
-			// Gestione centralizzata di tutti gli errori (sia coord che meteo)
-			console.error("Errore:", err);
-			output.textContent = err.message || "Errore nella ricerca del meteo.";
-			document.body.style.background = "#f2f2f2";
-		})
-		.finally(() => {
-			// Riabilita il bottone in ogni caso
-			cercaBtn.disabled = false;
-		});
+	try {
+		// Attende il risultato della ricerca coordinate
+		const coord = await cercaCoordinate(nome);
+
+		// Attende il risultato del meteo
+		const meteo = await ottieniMeteo(coord.latitude, coord.longitude);
+
+		// Mostra il risultato
+		mostraMeteo(coord.name, meteo.temperature_2m);
+
+	} catch (err) {
+		// Gestione centralizzata di tutti gli errori con try/catch
+		console.error("Errore:", err);
+		output.textContent = err.message || "Errore nella ricerca del meteo.";
+		document.body.style.background = "#f2f2f2";
+
+	} finally {
+		// Riabilita il bottone in ogni caso
+		cercaBtn.disabled = false;
+	}
 });

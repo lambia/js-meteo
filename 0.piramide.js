@@ -6,7 +6,7 @@ const output = document.getElementById("output");
  * Gestisce il flusso principale quando l'utente clicca "Cerca".
  * Tutto inline senza funzioni separate.
  */
-cercaBtn.onclick = function () {
+cercaBtn.addEventListener("click", function () {
 	const nome = input.value.trim();
 
 	// Controllo input vuoto
@@ -67,4 +67,4 @@ cercaBtn.onclick = function () {
 		output.textContent = "Errore nella ricerca della città.";
 		document.body.style.background = "#f2f2f2";
 	});
-};
+});

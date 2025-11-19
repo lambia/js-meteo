@@ -20,6 +20,7 @@ function cercaCoordinate(nomeCitta) {
 	}).catch(() => null);
 
 	return chiamata;
+
 }
 
 /**
@@ -59,7 +60,7 @@ function mostraMeteo(nome, temperatura) {
 /**
  * Gestisce il flusso principale quando l’utente clicca "Cerca".
  */
-cercaBtn.onclick = function () {
+cercaBtn.addEventListener("click", function () {
 	const nome = input.value.trim();
 
 	if (nome === "") {
@@ -86,4 +87,4 @@ cercaBtn.onclick = function () {
 		});
 
 	});
-};
+});

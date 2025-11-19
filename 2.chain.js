@@ -1,3 +1,19 @@
+/*
+	Soluzione "promise chain" con singolo catch
+
+	Come nella precedente, funzioni che restituiscono le Promise delle chiamate.
+	La vera differenza è al rigo 118: la seconda funzione non viene solo invocata, ma ne viene fatto il return.
+
+	Vantaggi:
+	- Questa tecnica permette di avere un unico .catch centralizzato
+	- Codice centralizzato, più chiaro e manutenibile
+	- Soluzione corretta senza bisogno di conoscere async/await
+
+	Problemi:
+	- Ancora migliorabile con async/await
+
+*/
+
 const input = document.getElementById("cittaInput");
 const cercaBtn = document.getElementById("cercaBtn");
 const output = document.getElementById("output");

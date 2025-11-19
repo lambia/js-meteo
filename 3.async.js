@@ -1,3 +1,19 @@
+/*
+	Soluzione "async/await" con singolo catch
+
+	In questo caso usiamo funzioni asincrone che "aspettano" il risultato della chiamata e lo restituiscono.
+	Gestiamo gli errori con un tradizionale blocco try{} catch{} intorno alle chiamate (rigo 107-126)
+
+	Vantaggi:
+	- Questa tecnica permette di avere un unico .catch centralizzato
+	- Codice centralizzato, più chiaro e manutenibile
+	- Codice sequenziale, come se fosse sincrono: non c'è annidamento
+
+	Problemi:
+	- Bisogna familiarizzare con async/await
+
+*/
+
 const input = document.getElementById("cittaInput");
 const cercaBtn = document.getElementById("cercaBtn");
 const output = document.getElementById("output");

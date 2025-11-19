@@ -1,3 +1,21 @@
+/*
+	Soluzione "a funzioni" con doppio-catch
+
+	Usiamo piccole funzioni che si occupano di effettuare la chiamate.
+	Le funzioni restituiscono la chiamata stessa (l'oggetto Promise che rappresenta l'operazione).
+	
+	Vantaggi:
+	- In questo modo le funzioni possono essere chiamate usando un .then().catch()
+	- Usando funzioni possiamo documentarle con commenti JSDoc.
+	- Disabilito il pulsante per evitare race conditions.
+	- Validazione più completa.
+
+	Problemi:
+	- Abbiamo ancora chiamate annidate (leggibilità)
+	- Abbiamo ancora 2 catch separati (ripetizione di codice)
+
+*/
+
 const input = document.getElementById("cittaInput");
 const cercaBtn = document.getElementById("cercaBtn");
 const output = document.getElementById("output");

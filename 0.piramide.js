@@ -1,3 +1,20 @@
+/*
+	Soluzione "a piramide" che porta all'anti-pattern detto "callback hell"
+
+	Gli errori vengono gestiti da due catch separati per le due chiamate.
+	La seconda chiamata è annidata dentro la prima.
+	Validazione base.
+
+	Vantaggi:
+	- Funziona
+	
+	Problemi:
+	- Race condition: il button non viene disabilitato durante la chiamata e permette chiamate multiple
+	- Il codice non è particolarmente leggibile, manutenibile o riutilizzabile
+	- La validazione non è completa (non controllo coordinate e temperatura)
+
+*/
+
 const input = document.getElementById("cittaInput");
 const cercaBtn = document.getElementById("cercaBtn");
 const output = document.getElementById("output");

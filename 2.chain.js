@@ -10,7 +10,7 @@
 	- Soluzione corretta senza bisogno di conoscere async/await
 
 	Problemi:
-	- Ancora migliorabile con async/await
+	- Ancora migliorabile (scalabilità) con async/await
 
 */
 
